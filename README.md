@@ -33,6 +33,8 @@ To resolve this, we propose a **two-stage denoising pipeline**:
 2. **VSTNet** transforms non-stationary Rician → stationary Gaussian
 
 Given I(x) (MRI magnitude) and σ₀(x) (noise variance from SigmaNet), VSTNet predicts two positive parameters:
+
+
 Θ = (Θ₁ , Θ₂), 
 
 Θ₁(x) > 0
@@ -47,6 +49,8 @@ The stabilized image is computed as:
 VSTNet is trained to enforce approximate Gaussianity below:
 
 J = λ₁·(1 − Var(Ĩ))² + λ₂·Skew(Ĩ)² + λ₃·ExcessKurt(Ĩ)² + λ₄·Mean(Ĩ)²
+
+
 Where:
 
 Var(Ĩ) → variance
