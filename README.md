@@ -75,7 +75,7 @@ python syn_non_stat_rician_add.py \
   --seed 0 \
   --save_png \
   --save_clean_npy
-Produces:
+**Produces:**
 clean_npy/
 noisy_npy/
 sigma_npy/
