@@ -48,10 +48,9 @@ This **decouples physical noise modeling** from learned denoising and enables di
 ## Key Contributions
 
 ✔ Handles **non-stationary Rician** MRI noise  
-✔ Converts MRI noise to **IID Gaussian** for diffusion  
-✔ Improves SNR and anatomical detail preservation  
-✔ Modular: DDPM, DDIM, Score-SDE are interchangeable  
-✔ Validated on phantom + simulated MRI datasets  
+✔ Converts MRI noise to **Approximate Gaussian** for diffusion    
+✔ Uses: DDPM for training and DDIM for inference.  
+✔ Validated on simulated MRI datasets  
 
 ---
 
