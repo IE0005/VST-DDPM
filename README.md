@@ -39,15 +39,19 @@ u₂(x) ≥ 0
 
 The stabilized image is computed as:
 
-Ĩ(x) = σ₀(x) * sqrt( (u₁(x)² * I(x)² / σ₀(x)² ) - u₂(x) )
+Ĩ(x) = σ₀(x) * sqrt( (u₁(x)² * I(x)² / σ₀(x)²) - u₂(x) )
+
 
 ### Stage II — Diffusion Denoising
 
 Diffusion denoisers operate on IID Gaussian corrupted images:
 
 Ĩ = x₀ + σ·ε,    ε ~ N(0, 1) in training 
+
+
 After VST, the stabilized image:
 Ĩ = A₀ + σ(x).N(x;0,1),  
+
 The diffusion model then removes the approximately IID Gaussian noise from the variance-stabilized image.
 
 
