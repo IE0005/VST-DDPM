@@ -1,10 +1,6 @@
 # Deep Variance Stabilization + Diffusion Denoising for Non-Stationary Rician MRI Noise
 
-<p align="center">
-  <img src="vst_denoiser_framework.png" width="900"/>
-</p>
 
----
 
 ## Overview
 
@@ -21,10 +17,14 @@ the noise becomes **spatially varying**, leading to **non-stationary Rician nois
 
 To resolve this, we propose a **two-stage denoising pipeline**:
 
-> **Dataset → SigmaNet → VSTNet → Diffusion → Final MRI**
+> **Dataset → SigmaNet → VSTNet → Diffusion → Denoised MRI**
 
 ---
+<p align="center">
+  <img src="vst_denoiser_framework.png" width="900"/>
+</p>
 
+---
 ## Pipeline Summary
 
 ### Stage I — Variance Stabilization (Physics-Informed)
@@ -75,14 +75,18 @@ python syn_non_stat_rician_add.py \
   --seed 0 \
   --save_png \
   --save_clean_npy
-**Produces:**
+ ```
+Produces:
+```bash
 clean_npy/
 noisy_npy/
 sigma_npy/
 noisy_png/
 sigma_png/
 manifest.csv
+```
 # 2. Train SigmaNet (Noise Variance Estimator)
+```bash
 python train_homomorphic_sigmanet.py \
   --manifest <manifest.csv> \
   --base_dir <root_dir> \
@@ -99,7 +103,9 @@ python train_homomorphic_sigmanet.py \
   --tv_weight 0.05 \
   --max_viz 3 \
   --amp
+  ```
 # 3. SigmaNet Inference
+```bash
 python infer_homomorphic_sigmanet.py \
   --ckpt <sigmanet_best_or_last.pth> \
   --manifest <manifest.csv> \
@@ -109,12 +115,15 @@ python infer_homomorphic_sigmanet.py \
   --blur_ksize 31 \
   --blur_sigma 7.0 \
   --eval_gt
-
+```
 Produces: 
+```bash
 sigma_pred_npy/
 sigma_pred_png/
 metrics.csv
+```
 # 4. Train VSTNet (Variance Stabilizer)
+```bash
 python train_vstnet_fixed.py \
   --out_dir <vstnet_runs> \
   --synthetic 0 \
@@ -126,8 +135,9 @@ python train_vstnet_fixed.py \
   --device cuda \
   --epochs 20 \
   --batch_size 8
-
+```
 # 5. VSTNet Inference → Generate Stabilized Images
+```bash
 python infer_vstnet_fixed.py \
   --ckpt <vstnet_ckpt.pt> \
   --noisy_dir <noisy_png> \
@@ -144,11 +154,15 @@ python infer_vstnet_fixed.py \
   --blur_ks 21 \
   --blur_sigma 3.0 \
   --save_extra 0
+```
 Outputs:
+```bash
 I_tilde_npy/   <-- used for diffusion training
 I_tilde_png/
 u1_u2.csv
+```
 # 6. Diffusion Training (Stage II)
+```bash
 python mri_denoiser_controlled_noise.py \
   --mode train \
   --image_size 0 \
@@ -157,7 +171,9 @@ python mri_denoiser_controlled_noise.py \
   --train_steps 100000 \
   --timesteps 1000 \
   --save_dir <output_dir>
+```
 # 7. Diffusion Inference
+```bash
 python mri_denoiser_controlled_noise.py \
   --mode denoise_few \
   --image_size 0 \
@@ -166,6 +182,7 @@ python mri_denoiser_controlled_noise.py \
   --out_folder <output_folder> \
   --few_steps 20 \
   --eta 0.0
+```
 Why Non-Stationary MRI Noise is Difficult
 
 Traditional single-coil MRI is often modeled with stationary noise, meaning noise variance does not change spatially:
@@ -177,12 +194,15 @@ However, modern MRI uses multiple receiver coils, coil sensitivity profiles, and
 I(x) ~ Rician( μ(x), σ²(x) )
 
 
-# Repository Structure
-├── syn_non_stat_rician_add.py
-├── train_homomorphic_sigmanet.py
-├── infer_homomorphic_sigmanet.py
-├── train_vstnet_fixed.py
-├── infer_vstnet_fixed.py
-├── mri_denoiser_controlled_noise.py
-├── vst_denoiser_framework.png
-└── README.md
+## Core requirements
+```bash
+    pip install torch numpy opencv-python scikit-learn matplotlib scikit-image pillow
+ ```
+
+## 📄 License
+
+Released under the [MIT License](LICENSE).
+
+##  Author
+
+Maintained by [Israt Zarin Era](https://github.com/IE0005)
