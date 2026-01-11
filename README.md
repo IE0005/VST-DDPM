@@ -39,7 +39,8 @@ u₂(x) ≥ 0
 
 The stabilized image is computed as:
 
-I_tilde(x) = sigma0(x) * sqrt( (u1(x)^2 * I(x)^2 / sigma0(x)^2) - u2(x) )
+Ĩ(x) = σ₀(x) * √( (u₁(x)² * I(x)² / σ₀(x)²) − u₂(x) )
+
 
 
 
@@ -51,6 +52,7 @@ Diffusion denoisers operate on IID Gaussian corrupted images:
 
 
 After VST, the stabilized image:
+
 Ĩ = A₀ + σ(x).N(x;0,1),  
 
 The diffusion model then removes the approximately IID Gaussian noise from the variance-stabilized image.
