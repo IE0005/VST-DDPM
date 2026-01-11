@@ -32,17 +32,14 @@ To resolve this, we propose a **two-stage denoising pipeline**:
 1. **SigmaNet** predicts spatial noise variance
 2. **VSTNet** transforms non-stationary Rician → stationary Gaussian
 
-\[
-I(x) \sim \text{Rician}(\mu(x), \sigma^2(x)) \Rightarrow \tilde{I}(x) \sim \mathcal{N}(\mu, 1)
-\]
+I(x) ~ Rician( μ(x), σ²(x) )  →  Î(x) ~ N( μ, 1 )
 
 ### Stage II — Diffusion Denoising
 
 Diffusion denoisers operate on IID Gaussian corrupted images:
 
-\[
-\tilde{I} = x_0 + \sigma \epsilon, \quad \epsilon \sim \mathcal{N}(0,1)
-\]
+Ĩ = x₀ + σ·ε,    ε ~ N(0, 1)
+
 
 This **decouples physical noise modeling** from learned denoising and enables diffusion models to generalize.
 
@@ -183,15 +180,7 @@ python mri_denoiser_controlled_noise.py \
   --few_steps 20 \
   --eta 0.0
 ```
-Why Non-Stationary MRI Noise is Difficult
 
-Traditional single-coil MRI is often modeled with stationary noise, meaning noise variance does not change spatially:
-
-σ(x) = σ0
-
-However, modern MRI uses multiple receiver coils, coil sensitivity profiles, and parallel imaging, which produce non-stationary Rician noise:
-
-I(x) ~ Rician( μ(x), σ²(x) )
 
 
 ## Core requirements
