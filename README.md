@@ -39,7 +39,8 @@ u₂(x) ≥ 0
 
 The stabilized image is computed as:
 
-Ĩ(x) = σ₀(x) * sqrt( (u₁(x)² * I(x)² / σ₀(x)²) - u₂(x) )
+I_tilde(x) = sigma0(x) * sqrt( (u1(x)^2 * I(x)^2 / sigma0(x)^2) - u2(x) )
+
 
 
 ### Stage II — Diffusion Denoising
