@@ -32,16 +32,24 @@ To resolve this, we propose a **two-stage denoising pipeline**:
 1. **SigmaNet** predicts spatial noise variance
 2. **VSTNet** transforms non-stationary Rician → stationary Gaussian
 
-I(x) ~ Rician( μ(x), σ²(x) )  →  Î(x) ~ N( μ, 1 )
+Given I(x) (MRI magnitude) and σ₀(x) (noise variance from SigmaNet), VSTNet predicts two positive parameters:
+
+u₁(x) > 0
+u₂(x) ≥ 0
+
+The stabilized image is computed as:
+
+Ĩ(x) = σ₀(x) * sqrt( (u₁(x)² * I(x)² / σ₀(x)² ) - u₂(x) )
 
 ### Stage II — Diffusion Denoising
 
 Diffusion denoisers operate on IID Gaussian corrupted images:
 
-Ĩ = x₀ + σ·ε,    ε ~ N(0, 1)
+Ĩ = x₀ + σ·ε,    ε ~ N(0, 1) in training 
+After VST, the stabilized image:
+Ĩ = A₀ + σ(x).N(x;0,1),  
+The diffusion model then removes the approximately IID Gaussian noise from the variance-stabilized image.
 
-
-This **decouples physical noise modeling** from learned denoising and enables diffusion models to generalize.
 
 ---
 
@@ -50,7 +58,7 @@ This **decouples physical noise modeling** from learned denoising and enables di
 ✔ Handles **non-stationary Rician** MRI noise  
 ✔ Converts MRI noise to **Approximate Gaussian** for diffusion    
 ✔ Uses: DDPM for training and DDIM for inference.  
-✔ Validated on simulated MRI datasets  
+✔ Trained and tested on simulated Brain MRI datasets. 
 
 ---
 
