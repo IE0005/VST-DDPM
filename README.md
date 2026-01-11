@@ -34,14 +34,31 @@ To resolve this, we propose a **two-stage denoising pipeline**:
 
 Given I(x) (MRI magnitude) and σ₀(x) (noise variance from SigmaNet), VSTNet predicts two positive parameters:
 
-u₁(x) > 0
-u₂(x) ≥ 0
-
+Θ₁(x) > 0
+Θ₂(x) ≥ 0
+Θ = (Θ₁ , Θ₂)
 The stabilized image is computed as:
 
-Ĩ(x) = σ₀(x) * √( (u₁(x)² * I(x)² / σ₀(x)²) − u₂(x) )
+Ĩ(x) = σ₀(x) * √( (Θ₁(x)² * I(x)² / σ₀(x)²) − Θ₂(x) )
 
+VSTNet is trained to enforce approximate Gaussianity below:
 
+J = λ₁·(1 − Var(Ĩ))² + λ₂·Skew(Ĩ)² + λ₃·ExcessKurt(Ĩ)² + λ₄·Mean(Ĩ)²
+Where:
+
+Var(Ĩ) → variance
+
+Skew(Ĩ) → skewness
+
+ExcessKurt(Ĩ) → kurtosis − 3
+
+Mean(Ĩ) controls DC component
+
+coefficients: λ₁, λ₂, λ₃, λ₄ > 0
+
+Training objective:
+
+Θ* = argmin_Θ J
 
 
 ### Stage II — Diffusion Denoising
